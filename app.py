@@ -1,3 +1,4 @@
+import requests
 import os
 import json
 from flask import Flask
@@ -30,7 +31,11 @@ def webhook():
 def processRequest(req):
 	if req.get("result").get("action") != "echoAction":
 		return {}
-	res = makeEchoResponse(req);
+	res = makeEchoResponse(req)
+
+	# pass to push server
+	URL = "http://52.39.36.22:8000"
+	requests.post(URL, data=json.dumps(req))
 	return res;
 
 
