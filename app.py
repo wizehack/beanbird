@@ -40,7 +40,39 @@ def processRequest(req):
 
 
 def makeEchoResponse(req):
-	speech = req.get("result").get("resolvedQuery")
+	result = req.get("result")
+
+	if result is None:
+		speech = "I can not accept your request"
+		return {
+			"speech": speech,
+			"displayText": speech,
+			"source": "apiai-echo-sample"
+		}
+
+	query = result.get("resolvedQuery")
+	param = result.get("parameters").get("any")
+
+	if query is None:
+		speech = "Query is null"
+		return {
+			"speech": speech,
+			"displayText": speech,
+			"source": "apiai-echo-sample"
+		}
+
+
+	if param is None:
+		speech = "Parameter is null"
+		return {
+			"speech": speech,
+			"displayText": speech,
+			"source": "apiai-echo-sample"
+		}
+
+
+	speech = "You said " + query + ". " + param
+
 	return {
 		"speech": speech,
 		"displayText": speech,
