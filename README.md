@@ -9,6 +9,6 @@ More info about Api.ai webhooks could be found here:
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 # What does the service do?
-It's a echo fulfillment service that takes the `@sys.any` parameter from the action, returns user's input
+It's a echo fulfillment service that takes the tv control parameters from the action, returns user's input
 
 The service packs the result in the Api.ai webhook-compatible response JSON and returns it to Api.ai.
