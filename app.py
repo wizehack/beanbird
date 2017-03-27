@@ -11,72 +11,69 @@ app = Flask(__name__)
 @app.route('/webhook', methods=['POST'])
 def webhook():
 	req = request.get_json(silent=True, force=True)
-	print("Get Request:")
+	print(">>> Request:")
 	print(json.dumps(req, indent=4))
 
-	res = processRequest(req)
-	print("Request processed")
+	action = req.get("result").get("action")
+	param = req.get("result").get("parameters")
 
-	res = json.dumps(res, indent=4)
+	if action is not None:
+		query = makeQuery(action, param)
+	else:
+		print("action is None")
+
+	print("query")
+	print(json.dumps(query, indent=4))
+
+	# pass to push server
+	if query is not None:
+		speech = "Got it"
+		pushToServer(query)
+
+	response = makeSpeechResponse(speech)
+	res = json.dumps(response, indent=4)
+
+	print(">>> Response:")
 	print(res)
 
 	r = make_response(res)
-	print(r)
-
 	r.headers['Content-Type'] = 'application/json'
 
 	return r
 
 
-def processRequest(req):
-	if req.get("result").get("action") != "echoAction":
-		return {}
-	res = makeEchoResponse(req)
-
-	# pass to push server
+def pushToServer(query):
 	URL = "http://52.39.36.22:8000"
-	requests.post(URL, data=json.dumps(req))
-	return res;
+
+	if query is not None:
+		requests.post(URL, data=json.dumps(query))
 
 
-def makeEchoResponse(req):
-	result = req.get("result")
-
-	if result is None:
-		speech = "I can not accept your request"
-		return {
-			"speech": speech,
-			"displayText": speech,
-			"source": "apiai-echo-sample"
-		}
-
-	query = result.get("resolvedQuery")
-	param = result.get("parameters").get("any")
-
-	if query is None:
-		speech = "Query is null"
-		return {
-			"speech": speech,
-			"displayText": speech,
-			"source": "apiai-echo-sample"
-		}
-
-
-	if param is None:
-		speech = "Parameter is null"
-		return {
-			"speech": speech,
-			"displayText": speech,
-			"source": "apiai-echo-sample"
-		}
-
-
-	speech = "You said " + query + ". " + param
+def makeSpeechResponse(speech):
+	if speech is None:
+		speech = "Sorry, I cannot understand your command"
 
 	return {
-		"speech": speech,
-		"displayText": speech,
-		"source": "apiai-echo-sample"
+		"speech" : speech,
+		"displayText" : speech,
+		"source" : "beanbird"
+	}
+
+
+def makeQuery(action, param):
+	print("aciton")
+	print(action)
+
+	print("param")
+	print(json.dumps(param, indent=4))
+
+	if param is None:
+		print("param is None")
+		return {}
+
+	return {
+		"action" : action,
+		"param" : param
 	}
 
 

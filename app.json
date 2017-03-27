@@ -1,7 +1,7 @@
 {
-    "name": "API.AI webhook demonstration",
-    "description": "API.AI webhook demonstration",
-    "repository": "https://github.com/wizehack/api-ai-webhook-response",
+    "name": "api.ai for webOS TV",
+    "description": "api.ai  webhook for tv control",
+    "repository": "https://github.com/wizehack/beanbird",
     "logo": "http://xvir.github.io/img/apiai.png",
     "keywords": ["api.ai", "natural language"]
 }
